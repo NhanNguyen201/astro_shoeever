@@ -3,7 +3,7 @@ import SimpleBlockContent from '../SimpleBlockContent.astro'
 const { text, backgroundColor, textColor } = Astro.props;
 ---
 
-<div class="w-full my-2">
+<div class="w-full">
     <div class="p-4" style={{backgroundColor: backgroundColor?.hex || 'black', color: textColor?.hex || 'white'}}>
         {text && <SimpleBlockContent blocks={text} />}
     </div>

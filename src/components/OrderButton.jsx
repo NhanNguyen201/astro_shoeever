@@ -9,10 +9,11 @@ const OrderButton = () => {
   const [telephone, setTelephone] = useState("");
   const [details, setDetails] = useState("");
   const [inputErrors, setInputErrors] = useState({});
-  
+  const [loading, setLoading] = useState(false);
   const [orderMessage, setOrderMessage] = useState("");
   const handleCloseModal = () => {
     setModalOpen(false);
+    setLoading(false);
     setInputErrors({});
     setOrderMessage("");
     setName("");
@@ -22,6 +23,7 @@ const OrderButton = () => {
   }
   const handleClick = async () => {
     try {
+      setLoading(true)
       setInputErrors({})
       const response = await fetch('/api/order', {
         method: 'POST',
@@ -41,6 +43,9 @@ const OrderButton = () => {
       }
     } catch (error) {
       setInputErrors({general: "Something is wrong. Unable to world probably for now."})
+    } finally {
+      setLoading(false);
+      
     }
   }
   const handleBackdropClick = (e) => {
@@ -132,9 +137,9 @@ const OrderButton = () => {
             <button onClick={handleCloseModal} className="px-4 py-2 mr-2 bg-gray-400 text-white outline-none rounded-sm">
               Close
             </button>
-            <button onClick={handleClick} className="px-4 py-2  bg-indigo-600 text-white outline-none rounded-sm">
+            {!loading ? <button onClick={handleClick} className="px-4 py-2  bg-indigo-600 text-white outline-none rounded-sm">
               Confirm
-            </button>
+            </button> : <div className="px-4 py-2  bg-indigo-200 text-white outline-none rounded-sm">Loading...</div>}
           </div>
          
         </div>
