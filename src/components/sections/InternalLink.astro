@@ -1,0 +1,16 @@
+---
+
+// Replace 'any' with your specific type if you have one
+// export type Props = $<Mark<{ slug: { current: string }; _type: string }>>;
+
+const { node } = Astro.props;
+// const { slug } = node.markDef;
+// const href = `/${slug.current}`;
+// 
+let markKey = node.markDef._key;
+let slug = Astro.props.linksMarkdefs ? Astro.props.linksMarkdefs[markKey] : null;
+let href = slug ? `/${slug.current}` : "/";
+---
+<a href={href} class="internal-link text-inherit font-bold hover:underline">
+  <slot />
+</a>

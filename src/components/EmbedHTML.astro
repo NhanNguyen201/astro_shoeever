@@ -1,0 +1,9 @@
+---
+const {html} = Astro.props.node;
+  
+if (!html) {
+  return undefined
+}
+
+---
+<div set:html={html}/>

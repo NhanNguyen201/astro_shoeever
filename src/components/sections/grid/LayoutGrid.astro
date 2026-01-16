@@ -1,0 +1,47 @@
+---
+import * as LayoutGridItem from './layoutGridItem'
+import MissingSection from "../../sections/MissingSection.astro";
+const { layoutGridArray } = Astro.props;
+const sizes = {
+  // 1: 'w-1/12 max-xs:w-full',
+  // 2: 'w-1/6 max-sm:w-full',
+  3: 'w-1/4 max-md:w-1/2 max-sm:w-full',
+  4: 'w-1/3 max-md:w-1/2 max-xs:w-full',
+  5: 'w-5/12 md:w-1/2 max-xs:w-full',
+  6: 'w-1/2 max-md:w-full',
+  7: 'w-7/12 max-md:w-full',
+  8: 'w-2/3 max-md:w-full',
+  9: 'w-3/4 max-md:w-full',
+  10: 'w-5/6 max-md:w-full',
+  11: 'w-11/12 max-lg:w-full',
+  12: 'w-full'
+}
+
+function capitalizeString(str: string) {
+    if (typeof str !== 'string' || !str) return str
+  
+    return str.charAt(0).toUpperCase() + str.slice(1)
+}
+const resolveComponent = item => {
+  if (item.itemType.length == 0) {
+    return blankItem(sizes[item.itemSize])
+  }
+  const Section = LayoutGridItem[capitalizeString(item.itemType[0]._type)]
+  if (Section) return Section 
+  console.error('Cant find section', item) // eslint-disable-line no-console
+  return null
+}
+
+const blankItem = itemSize =>  `<div class="${sizes[itemSize]}"></div>`
+---
+
+<div class="realative flex flex-wrap items-stretch justify-start p-4 mx-auto max-w-7xl" >
+    {layoutGridArray.map((section, i) => {
+      const Section = resolveComponent(section)
+      if (!Section) {
+        return <div class=`${sizes[section.itemSize]} p-4`><MissingSection /></div>
+      }
+      
+        return <div class=`${sizes[section.itemSize]} p-4`><Section key={i} {...section.itemType[0]} /></div>
+    })}
+</div>

@@ -1,0 +1,19 @@
+---
+import { urlFor, client } from '../helpers/sanityClient.js'
+const {cardImage, route, cardTitle, text } = Astro.props;
+let data = await client.fetch(`*[_type == "route" && _id == $id]{
+  slug{
+    current
+  }
+}[0]`, {id: route._ref});
+---
+
+<div class="h-full border border-solid border-black rounded-sm shadow-lg flex flex-col justify-between overflow-hidden">
+    <div class="w-full h-36 overflow-hidden top-0 left-0 right-0 ">
+        <img src={urlFor(cardImage).height(144).fit('crop').url()} alt={cardTitle} class="w-full h-full object-cover rounded-t-sm"/>
+    </div>
+    <div class="p-2 grow bg-white">
+        {data ?  <a href={data.slug.current}><h3 class="font-semibold text-2xl max-md:text-xl">{cardTitle}</h3></a> : <h3 class="font-semibold text-2xl max-md:text-xl">{cardTitle}</h3>}
+        <p>{text}</p>
+    </div>
+</div>

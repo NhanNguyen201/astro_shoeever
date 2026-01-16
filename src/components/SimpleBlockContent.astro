@@ -1,0 +1,81 @@
+---
+import Color from './sections/Color.astro'
+import InternalLink from './sections/InternalLink.astro'
+import { PortableText } from 'astro-portabletext';
+import Figure from './Figure.astro';
+import EmbedHTML from './EmbedHTML.astro';
+import { client } from "../helpers/sanityClient";
+const { blocks } = Astro.props;
+// console.log("blocks: ", blocks.toString())
+let linksMarkdefs = {}
+let routeSlugs = {}
+for (let block of blocks) {
+  let { markDefs } = block;
+  if (markDefs) {
+    for (let markDef of markDefs) {
+      if (markDef._type === 'internalLink') {
+        if (!(markDef._key in linksMarkdefs)) {
+          linksMarkdefs[markDef._key] = markDef._ref;
+        }
+      }
+    }
+  }
+}
+
+if (linksMarkdefs && Object.keys(linksMarkdefs).length > 0) {
+  let ids = Object.values(linksMarkdefs).map(i => `'${i}'`)
+  let routeResult = await client.fetch(`*[_type == "route" && _id in [${ids}]]{
+    _id,
+    slug{
+      _type,
+      current
+    }
+  }`)
+  for (let route of routeResult) {
+    routeSlugs[route._id] = route.slug;
+  }
+  // Now replace the refs in linksMarkdefs with actual slugs
+  for (let key in linksMarkdefs) {
+    let refId = linksMarkdefs[key];
+    if (routeSlugs[refId]) {
+      linksMarkdefs[key] = routeSlugs[refId];
+    }
+  }
+}
+
+if (!blocks) {
+  return null
+}
+
+let components = {
+  type: {
+    embedHTML:EmbedHTML,
+    figure:Figure,
+  },
+  mark: {
+    internalLink: InternalLink,
+    color: Color,
+  }
+}
+
+---
+<PortableText 
+    value={blocks} 
+    components={components}
+>
+    <fragment slot="mark">{
+            ({
+              Component /* default component from `astro-portabletext` */,
+              props,
+              children,
+            }) => {
+                props = {...props, linksMarkdefs}
+                return(
+                  <Component {...props} class="mark">
+                    {children}
+                  </Component>
+                )
+            }
+        }</fragment
+      >
+</PortableText>

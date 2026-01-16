@@ -1,0 +1,9 @@
+---
+
+
+const { node } = Astro.props;
+---
+<span style={`color: ${node.markDef.hex}`}>
+  <slot />
+</span>
+

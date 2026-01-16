@@ -1,0 +1,23 @@
+---
+import SimpleBlockContent from './SimpleBlockContent.astro'
+import { urlFor } from "../helpers/sanityClient";
+import OrderButton from './OrderButton.jsx';
+const { heading, backgroundImage, text } = Astro.props
+const style = backgroundImage
+   ? {
+       backgroundImage: `url("${urlFor(backgroundImage).width(1000).fit('crop').url()}")`,
+     }
+   : {}
+---
+
+<div class="relative bg-black pt-16 pb-16 w-full bg-cover bg-no-repeat bg-center" style={style}>
+    <div class="max-w-6xl m-auto">
+        <div class="max-w-1/2 max-md:max-w-full pt-14 pb-14 max-sm:pt-6 max-sm:pb-6 rounded-2xl" style="background-color: rgba(255,255,255, 0.65)">
+            <div class="w-full max-w-6xl py-0 px-6 m-auto">
+                <h1 class="title">{heading}</h1>
+                <div class="tagline">{text && <SimpleBlockContent blocks={text} />}</div>
+                <OrderButton client:only/>
+            </div>
+        </div>
+    </div>
+</div>

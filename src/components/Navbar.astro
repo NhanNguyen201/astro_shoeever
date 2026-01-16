@@ -1,0 +1,15 @@
+---
+    const { routes } = Astro.props;
+---
+
+<nav class="w-full sticky top-0 z-10 py-4 bg-[#274690]">
+    <div class="px-4 max-w-6xl m-auto flex justify-between items-center text-[#F5F3F5]">
+        <div>
+            <a class="font-semibold" href="/">Home</a>
+        </div>
+        <div>
+            {routes.map(r => (<a class="font-semibold" href={r.slug.current}>{r.page.title}</a>))}
+        </div>  
+    </div>
+</nav>
+

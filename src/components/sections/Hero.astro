@@ -1,0 +1,91 @@
+---
+import SimpleBlockContent from '../SimpleBlockContent.astro'
+import { urlFor } from "../../helpers/sanityClient";
+const { heading, backgroundImage, text } = Astro.props
+const style = backgroundImage
+   ? {
+       backgroundImage: `url("${urlFor(backgroundImage).width(1000).auto('format').url()}")`,
+     }
+   : {}
+---
+<div class="relative bg-black pt-16 pb-16 w-full bg-cover bg-no-repeat bg-center" style={style}>
+    <div class="w-full pt-14 pb-14" style="background-color: rgba(255,255,255, 0.65)">
+        <div class="w-full max-w-7xl py-0 px-6 m-auto">
+            <h1 class="title">{heading}</h1>
+            <div class="tagline">{text && <SimpleBlockContent blocks={text} />}</div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @import "../../styles/custom-media.css";
+    
+    .root {
+        composes: center from "../../styles/shared.module.css";
+        position: relative;
+        background-color: var(--color-black, #000);
+        /* color: var(--color-white, #fff); */
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        padding-top: 6rem;
+        padding-bottom: 6rem;
+        @media (--media-min-medium) {
+            padding-bottom: 4rem;
+        }
+    }
+    
+    
+    .contentContainer {
+        width: 100%;
+        max-width: var(--width-large);
+        
+        background: ;
+        padding-top: 8rem;
+        padding-bottom: 8rem;
+    }
+    .content {
+        width: 100%;
+        margin: auto;
+        max-width: var(--width-medium);
+        padding: 0 1.5em;
+        box-sizing: border-box;
+    }
+    
+    .title {
+        position: relative;
+        font-weight: 600;
+        font-size: var(--font-title2-size);
+        line-height: var(--font-title2-line-height);
+        text-shadow: 0 1px 1px rgba(var(--color-black-rgb), 0.5);
+        margin: 0;
+        padding: 0;
+        
+        @media (--media-min-medium) {
+            font-size: var(--font-title1-size);
+            line-height: var(--font-title1-line-height);
+        }
+    }
+    
+    .tagline {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        margin-top: 0.5em;
+        margin-bottom: 1rem;
+        text-shadow: 0 1px 1px rgba(var(--color-black-rgb), 0.5);
+        
+        @media (--media-min-medium) {
+            font-size: var(--font-large-size);
+            line-height: var(--font-large-line-height);
+        }
+    }
+    
+    .tagline > p {
+        margin: 0;
+    }
+    
+    .root p a {
+        color: inherit;
+    }
+</style>

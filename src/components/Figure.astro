@@ -1,0 +1,46 @@
+---
+import { urlFor } from '../helpers/sanityClient'
+import { getImageDimensions } from '@sanity/asset-utils'
+const { node } = Astro.props
+if(!node) {
+    return null
+}
+const {alt, caption, asset} = node
+if (!asset) {
+    return null
+}
+
+const { width, height } = getImageDimensions(asset)
+const crop = node.crop
+let imageUrl = ""
+if (Boolean(crop)) {
+    const croppedWidth = Math.floor(width * (1 - (crop.right + crop.left)))
+    const croppedHeight = Math.floor(height * (1 - (crop.top + crop.bottom)))
+    
+    // compute the cropped image's position
+    const left = Math.floor(width * crop.left)
+    const top = Math.floor(height * crop.top)
+    imageUrl =  urlFor(asset)
+                .rect(left, top, croppedWidth, croppedHeight)
+                .url() 
+} else {
+    imageUrl = urlFor(asset).width(1000).url()
+    
+}
+let figureCaption = caption ? `<figcaption>
+    <div class="box-border w-full m-auto">
+        <div class="relative bg-white border-b border-l rounded-bl-sm border-black border-solid p-4">
+            <p>${caption}</p>
+        </div>
+    </div>
+</figcaption>` : null
+---
+
+<figure class="relative my-2 px-8">
+    <img
+        src={imageUrl}
+        class="block w-full"
+        alt={alt}
+    />
+    <div set:html={figureCaption}/>
+</figure>

@@ -1,0 +1,47 @@
+---
+import { client } from "../helpers/sanityClient";
+import groq from 'groq';
+
+import { slugParamToPath, getSlugVariations } from '../helpers/urls';
+import Layout from '../layouts/BaseLayout.astro';
+
+import RenderSections from '../components/RenderSections.astro'
+
+
+export const prerender = false;
+
+
+const { slug } = Astro.params
+const pageSlug = slugParamToPath(slug)
+let data;
+
+if (slug !== "/") {
+    try {
+        let result = await client.fetch(
+                // Get the route document with one of the possible slugs for the given requested path
+            groq`*[_type == "route" && slug.current in $possibleSlugs][0]{
+              page-> {
+                ...,
+                body[]{
+                  ...
+                }
+              }
+            }`,
+            {possibleSlugs: getSlugVariations(pageSlug)}
+        );
+        data = result?.page || {};  
+        // console.log("data: ", data)
+    } catch (error) {
+        console.error("Error fetching page data:", error);
+        data = {};
+    }
+}
+
+if (data && data?._type !== "page") {
+  return Astro.rewrite("/404")
+};
+---
+
+<Layout title={data.title} description={data.description} openGraphImage={data.openGraphImage}>
+    {data && <RenderSections sections={data.body}/>}
+</Layout>

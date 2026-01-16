@@ -1,0 +1,13 @@
+---
+import SimpleBlockContent from '../SimpleBlockContent.astro'
+const { heading, label, text } = Astro.props;
+---
+ 
+<div class="p-4">
+    <div class="w-full max-w-7xl m-auto box-border">
+        {label && <div class="uppercase text-2xl">{label}</div>}
+        {heading && <h2 class="text-xl">{heading}</h2>}
+        {text && <SimpleBlockContent blocks={text}/>}
+    </div>
+</div>
+

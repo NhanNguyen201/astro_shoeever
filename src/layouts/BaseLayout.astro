@@ -1,0 +1,88 @@
+---
+  import { SEO } from "astro-seo";
+  import "../styles/global.css";
+  import Navbar from '../components/Navbar.astro'
+  import { client, urlFor } from "../helpers/sanityClient";
+  import Footer from '../components/Footer.astro'
+  import groq from 'groq';
+  
+  const { title, openGraphImage, description } = Astro.props;
+  let siteSettings;
+  try {
+      let result = await client.fetch(
+              // Get the route document with one of the possible slugs for the given requested path
+          groq`*[_type == "siteSettings"][0]{
+                mainNavigation[] -> {
+                  ...,
+                  page -> {
+                    title
+                  }
+                },
+                footerNavigation[] -> {
+                  ...,
+                  page -> {
+                    title
+                  }
+                },
+                footerText
+            }`,
+      );
+      // console.log("Base layour result: ", result);
+      siteSettings = result || {};
+      // console.log("data: ", data)
+} catch (error) {
+  console.error("Error fetching page data:", error);
+  
+}
+const seo = `
+    
+`
+
+  
+  
+---
+
+<!doctype html>
+<html lang="en">
+    <head >
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<SEO
+            title={title}
+            description={description}
+            openGraph={{
+                  basic: {
+                  title: `${title}`,
+                  type: "A type.",
+                  image: `${urlFor(openGraphImage?.asset).width(600).height(400).fit("clip").url() || ""} `,
+                }
+            }}
+            
+            extend={{
+              // extending the default link tags
+                link: [{ rel: "icon", href: "/favicon.svg" }],
+                // extending the default meta tags
+                meta: [
+                    {
+                      name: "twitter:image",
+                      content: `${urlFor(openGraphImage?.asset).width(600).height(400).fit("clip").url() || ""} `,
+                    },    
+                    { name: "twitter:title", content: `${title}` },
+                    { name: "twitter:description", content: `${description}` },
+                ],
+            }}
+        />
+	</head>
+	<body>
+    	<div class="bg-[#666161] min-h-screen">
+           	<slot name="homepageHeroBanner"></slot>
+           	<Navbar routes={siteSettings.mainNavigation}/>
+           	<div class="max-w-6xl m-auto bg-[#E9E3DE] min-h-screen pt-2 pb-8">
+          		<slot />
+           	</div>
+            <Footer text={siteSettings.footerText} footerNavigation={siteSettings.footerNavigation}/>
+    	</div>
+	</body>
+</html>

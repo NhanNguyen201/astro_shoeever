@@ -1,0 +1,42 @@
+---
+interface Section {
+  _type: string;
+  [key: string]: any;
+}
+import MissingSection from "./sections/MissingSection.astro";
+
+import * as SectionComponents from './sections';
+
+
+function capitalizeString(str: string) {
+    if (typeof str !== 'string' || !str) return str
+  
+    return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+function resolveSections(section: Section) {
+  // eslint-disable-next-line import/namespace
+  const Section = SectionComponents[capitalizeString(section._type)]
+  
+  if (Section) {
+   
+    return Section 
+  }
+
+  console.error('Cant find section', section) // eslint-disable-line no-console
+  return null
+}
+const sections = Astro.props.sections || [];
+
+---
+
+<Fragment client:load>
+    {sections.map((section: Section, i) => {
+      const Section = resolveSections(section)
+      if (!Section) {
+        return <MissingSection />
+      }
+      
+        return <Section key={i} {...section} />
+    })}
+</Fragment>

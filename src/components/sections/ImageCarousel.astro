@@ -1,0 +1,56 @@
+---
+import { urlFor } from "../../helpers/sanityClient";
+const {images, height} = Astro.props;
+if(!images || images.length == 0) {
+    return null
+}
+// let heightStyle = "h-[]"   
+---
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<div class="p-4">
+    <div class="swiper" style={{height: `${height}px`}}>
+        <div class="swiper-wrapper">
+            {images.map((img) => (
+                <div class="swiper-slide">
+                    <img src={urlFor(img).width(1200).height(height).fit("crop").crop('focalpoint').url()} />
+                </div>
+            ))}
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+    
+</div>
+
+
+<script>
+  import Swiper from 'swiper';
+  import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+
+  // Initialize Swiper
+  const swiper = new Swiper('.swiper', {
+    modules: [Navigation, Pagination, Autoplay],
+    loop: true,
+    autoplay: { delay: 7000 },
+    pagination: { el: '.swiper-pagination', clickable: true },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+  });
+</script>
+
+<style>
+  .swiper {
+    width: 100%;
+    height: 500px;
+  }
+  .swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eee;
+    font-size: 2rem;
+  }
+</style>
