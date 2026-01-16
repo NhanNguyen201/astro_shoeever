@@ -6,7 +6,7 @@ import { loadEnv } from "vite";
 
 
 
-import vercel from '@astrojs/vercel';
+import vecelServerless from '@astrojs/vercel/serverless';
 
 
 
@@ -32,5 +32,5 @@ export default defineConfig({
     
   ],
 
-  adapter: vercel(),
+  adapter: vecelServerless({}),
 });
