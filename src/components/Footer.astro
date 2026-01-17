@@ -8,8 +8,8 @@ const { text, footerNavigation } = Astro.props
         <div class="max-w-6xl m-auto text-white text-center px-4">
             <SimpleBlockContent blocks={text} />
             <div class="mt-2 h-0 w-60 border-b-4 border-solid border-white m-auto"></div>
-            <div class="mt-4 flex justify-center items-center gap-6 flex-wrap">
-                {footerNavigation.map(r => (<a class="font-semibold" href={r.slug.current}>{r.page.title}</a>))}
+            <div class="mt-4 flex justify-center items-center flex-wrap">
+                {footerNavigation.map(r => (<a class="font-semibold ml-2 capitalize" href={r.slug.current}>{r.slug.current}</a>))}
             </div>
         </div>
         

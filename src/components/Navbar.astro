@@ -1,5 +1,8 @@
 ---
     const { routes } = Astro.props;
+    const capitalize = (slug) => {
+      return slug.charAt(0).toUpperCase() + slug.slice(1);
+    }
 ---
 
 <nav class="w-full sticky top-0 z-10 py-4 bg-[#274690]">
@@ -8,7 +11,7 @@
             <a class="font-semibold" href="/">Home</a>
         </div>
         <div>
-            {routes.map(r => (<a class="font-semibold" href={r.slug.current}>{r.page.title}</a>))}
+            {routes.map(r => <a class="font-semibold ml-2" href={r.slug.current}>{capitalize(r.slug.current)}</a>)}
         </div>  
     </div>
 </nav>

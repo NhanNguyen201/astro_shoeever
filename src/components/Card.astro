@@ -13,7 +13,7 @@ let data = await client.fetch(`*[_type == "route" && _id == $id]{
         <img src={urlFor(cardImage).height(144).fit('crop').url()} alt={cardTitle} class="w-full h-full object-cover rounded-t-sm"/>
     </div>
     <div class="p-2 grow bg-white">
-        {data ?  <a href={data.slug.current}><h3 class="font-semibold text-2xl max-md:text-xl">{cardTitle}</h3></a> : <h3 class="font-semibold text-2xl max-md:text-xl">{cardTitle}</h3>}
+        {data ?  <a href={data.slug.current}><h3 class="font-semibold text-2xl max-lg:text-xl">{cardTitle}</h3></a> : <h3 class="font-semibold text-2xl max-md:text-xl">{cardTitle}</h3>}
         <p>{text}</p>
     </div>
 </div>
